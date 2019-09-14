@@ -13,17 +13,21 @@ print("Say something...")
 # Note: Since recognize_once() returns only a single utterance, it is suitable only for single
 # shot recognition like command or query.
 # For long-running multi-utterance recognition, use start_continuous_recognition() instead.
-result = speech_recognizer.recognize_once()
-# Checks result.
-if result.reason == speechsdk.ResultReason.RecognizedSpeech:
-   print("Recognized: {}".format(result.text))
-elif result.reason == speechsdk.ResultReason.NoMatch:
-   print("No speech could be recognized: {}".format(result.no_match_details))
-elif result.reason == speechsdk.ResultReason.Canceled:
-   cancellation_details = result.cancellation_details
-   print("Speech Recognition canceled: {}".format(cancellation_details.reason))
-   if cancellation_details.reason == speechsdk.CancellationReason.Error:
-       print("Error details: {}".format(cancellation_details.error_details))
+def resultCheck():
+    result = speech_recognizer.recognize_once()
+    # Checks result.
+    if result.reason == speechsdk.ResultReason.RecognizedSpeech:
+        print("Recognized: {}".format(result.text))
+    elif result.reason == speechsdk.ResultReason.NoMatch:
+        print("No speech could be recognized: {}".format(result.no_match_details))
+    elif result.reason == speechsdk.ResultReason.Canceled:
+        cancellation_details = result.cancellation_details
+        print("Speech Recognition canceled: {}".format(cancellation_details.reason))
+    if cancellation_details.reason == speechsdk.CancellationReason.Error:
+        print("Error details: {}".format(cancellation_details.error_details))
+    return result
+
+
 
 
 

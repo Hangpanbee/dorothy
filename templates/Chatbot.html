@@ -41,10 +41,11 @@
             placeholder="Tell me how you feel today..."
             onkeydown="if (event.keyCode == 13)document.getElementById('send').click()"
           />
+          <p> {{ myfunction() }}</p>
         </div>
      
 
-        <div class = "send_message1" id = 'audio' onclick = "get_audio()">
+        <div class = "send_message1" id = 'audio' onclick = "start_dictation()">
            
 
         <span style="font-size: 32px; color:black;">

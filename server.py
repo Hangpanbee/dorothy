@@ -1,5 +1,6 @@
-from flask import Flask, render_template
+from flask import Flask, render_template, request, jsonify
 import azure.cognitiveservices.speech as speechsdk
+from voice import resultCheck
 
 app = Flask(__name__)
 
@@ -11,8 +12,8 @@ def index():
 
 @app.route('/chat')
 def chat():
-    return render_template('Chatbot.html')
-
+    return render_template('Chatbot.html', myfunction=resultCheck)
+'''
 @app.route('/audio', methods = ['POST'])
 def get_audio():
     speech_key, service_region = "e32d7ebb7c6045ce950be567223b738f", "westus"
@@ -32,7 +33,7 @@ def get_audio():
         return ("Error details: {}".format(cancellation_details.error_details))
     print(result)
     print(result.text)
-
+    '''
 
 if __name__ == '__main__':
     app.run(debug=True)

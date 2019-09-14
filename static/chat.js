@@ -54,23 +54,42 @@ insert_chat('me',message);
 interact(sender);
  }
 
-function insert_text_box(text){
-  var control = ''
-  control = '<li class="message right appeared">'+
-  '<div class="avatar"><img class="img-circle" style="width:100%;" src="'+ me.avatar +'" /> </div>'+
-  '<div class="text_wrapper">'+
-  '<div class="text">'+text+'</div>'+
-  '</div>'+
-  '</li>'
-}
 
 function get_audio(){
   $.ajax({
     type: 'POST',
     url: "/audio",
     context: 'application/json',
+    dataType: 'json',
   }).done(function(){
-    alert('finished script');;
+    insert_chat('me', message);
+    interact(sender);
   });
 
+}
+
+function startDictation() {
+
+  if (window.hasOwnProperty('webkitSpeechRecognition')) {
+
+    var recognition = new webkitSpeechRecognition();
+
+    recognition.continuous = false;
+    recognition.interimResults = false;
+
+    recognition.lang = "en-US";
+    recognition.start();
+
+    recognition.onresult = function(e) {
+      document.getElementById('text_message').value
+                               = e.results[0][0].transcript;
+      recognition.stop();
+      document.getElementById('text_message').submit();
+    };
+
+    recognition.onerror = function(e) {
+      recognition.stop();
+    }
+
+  }
 }
