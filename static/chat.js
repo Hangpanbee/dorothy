@@ -49,17 +49,26 @@ var message = document.getElementById("text_message").value;
 var json_data = {"msg":message}
 var sender = JSON.stringify(json_data)
 console.log(sender)
-console.log( <span style="font-size: 32px; color:black;">
-<i class="fas fa-microphone"></i>
-</span>);
+console.log(message);
 insert_chat('me',message);
 interact(sender);
  }
 
- function get_audio(){
+function insert_text_box(text){
+  var control = ''
+  control = '<li class="message right appeared">'+
+  '<div class="avatar"><img class="img-circle" style="width:100%;" src="'+ me.avatar +'" /> </div>'+
+  '<div class="text_wrapper">'+
+  '<div class="text">'+text+'</div>'+
+  '</div>'+
+  '</li>'
+}
+
+function get_audio(){
   $.ajax({
-    url: "voice.py",
-    context: document.body,
+    type: 'POST',
+    url: "/audio",
+    context: 'application/json',
   }).done(function(){
     alert('finished script');;
   });
