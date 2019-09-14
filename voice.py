@@ -3,7 +3,7 @@ import azure.cognitiveservices.speech as speechsdk
 # Replace with your own subscription key and service region (e.g., "westus").
 speech_key, service_region = "e32d7ebb7c6045ce950be567223b738f", "westus"
 speech_config = speechsdk.SpeechConfig(
-   subscription=speech_key, region=service_region)
+    subscription=speech_key, region=service_region)
 # Creates a recognizer with the given settings
 speech_recognizer = speechsdk.SpeechRecognizer(speech_config=speech_config)
 print("Say something...")
@@ -13,18 +13,20 @@ print("Say something...")
 # Note: Since recognize_once() returns only a single utterance, it is suitable only for single
 # shot recognition like command or query.
 # For long-running multi-utterance recognition, use start_continuous_recognition() instead.
-result = speech_recognizer.recognize_once()
-# Checks result.
-if result.reason == speechsdk.ResultReason.RecognizedSpeech:
-   print("Recognized: {}".format(result.text))
-elif result.reason == speechsdk.ResultReason.NoMatch:
-   print("No speech could be recognized: {}".format(result.no_match_details))
-elif result.reason == speechsdk.ResultReason.Canceled:
-   cancellation_details = result.cancellation_details
-   print("Speech Recognition canceled: {}".format(cancellation_details.reason))
-   if cancellation_details.reason == speechsdk.CancellationReason.Error:
-       print("Error details: {}".format(cancellation_details.error_details))
 
 
-
-
+def resultCheck():
+    result = speech_recognizer.recognize_once()
+    # Checks result.
+    if result.reason == speechsdk.ResultReason.RecognizedSpeech:
+        print("Recognized: {}".format(result.text))
+    elif result.reason == speechsdk.ResultReason.NoMatch:
+        print("No speech could be recognized: {}".format(result.no_match_details))
+    elif result.reason == speechsdk.ResultReason.Canceled:
+        cancellation_details = result.cancellation_details
+        print("Speech Recognition canceled: {}".format(
+            cancellation_details.reason))
+        if cancellation_details.reason == speechsdk.CancellationReason.Error:
+            print("Error details: {}".format(
+                cancellation_details.error_details))
+    return result

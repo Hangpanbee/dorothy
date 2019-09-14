@@ -20,18 +20,18 @@
 
 		<!-- CSS -->
 		
-			<link rel="stylesheet" href="style.css">
+			<link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
 		
 
 		<!-- JS -->
 		
-			<script defer src="main.js"></script>
+			<script defer src="{{ url_for('static', filename='main.js') }}"></script>
 		
 
 		<!-- Preload -->
-		<link rel="preload" href="assets/fonts/rubik-regular.woff2" as="font" type="font/woff2" crossorigin>
+		<!--<link rel="preload" href="assets/fonts/rubik-regular.woff2" as="font" type="font/woff2" crossorigin>
 		<link rel="preload" href="assets/fonts/space-mono-regular.woff2" as="font" type="font/woff2" crossorigin>
-
+		-->
 		<!-- JSON-LD -->
 		<script type="application/ld+json">
 			{
@@ -59,7 +59,7 @@
 	</head>
 	<body>
         <video autoplay muted loop id="mlvideo">
-            <source src="assets/videos/sadman.mov" type="video/mp4">
+            <source src="{{ url_for('static/assets/videos', filename='sadman.mov') }}" type="video/mp4">
         </video>
 
 		<!-- Cursor -->
@@ -91,7 +91,7 @@
 
 			<nav class="header__nav nav">
 
-				<a class="link spacing-small" href="Chatbot.html">
+				<a class="link spacing-small" href="chat.html">
 	
 		<span class="link__icon link__icon--left link__icon--guy">👨‍💻</span>
 	
