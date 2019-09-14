@@ -9,7 +9,7 @@ def index():
 
 @app.route('/chat')
 def chat():
-    return render_template('Chatbot.html')
+    return render_template('chat.html')
 
 
 if __name__ == '__main__':
