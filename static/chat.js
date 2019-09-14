@@ -49,9 +49,19 @@ var message = document.getElementById("text_message").value;
 var json_data = {"msg":message}
 var sender = JSON.stringify(json_data)
 console.log(sender)
-console.log(message);
+console.log( <span style="font-size: 32px; color:black;">
+<i class="fas fa-microphone"></i>
+</span>);
 insert_chat('me',message);
 interact(sender);
  }
 
+ function get_audio(){
+  $.ajax({
+    url: "voice.py",
+    context: document.body,
+  }).done(function(){
+    alert('finished script');;
+  });
 
+}
