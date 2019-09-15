@@ -7,5 +7,5 @@ def sentimental_analysis(message):
     return a, b
 
 
-print(sentimental_analysis('have a good day'))
+print(sentimental_analysis('I feel really really sad'))
 
