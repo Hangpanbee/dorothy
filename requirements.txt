@@ -1,0 +1,8 @@
+textblob
+flask
+azure.cognitiveservices.speech
+json
+tensorflow
+bs4
+requests
+pickle
