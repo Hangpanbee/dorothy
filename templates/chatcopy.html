@@ -283,13 +283,17 @@
           class="message_input_wrapper"
           style="font-family: Ubuntu; float:left; font-size: 17px;"
         >
+        <form action= "{{ url_for('reply') }}" method="POST">
           <input
+            type="text"
             class="message_input"
             id="text_message"
+            name= "sentimental_name"
             value="{{ myfunction() }}"
             onkeydown="if (event.keyCode ==13)document.getElementById('send').click()"
           />
         </div>
+      </form>
 
         <div class="send_message1" style="float:right;">
           <span style="font-size: 35px; color: #a3d063;">
