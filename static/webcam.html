@@ -1,0 +1,35 @@
+<!DOCTYPE html>
+
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <meta id="theme-color" name="theme-color" content="#fff" />
+
+    <base target="_blank" />
+
+    <title>Webcam Use</title>
+
+    <link rel="stylesheet" href="./webcam.css" />
+
+    <style>
+      #webcam {
+        object-fit: cover;
+      }
+
+      @media (min-width: 1000px) {
+        #webcam {
+          height: 300px;
+        }
+      }
+    </style>
+  </head>
+
+  <body>
+    <div id="container" class="webcam">
+      <video autoplay playsinline></video>
+    </div>
+
+    <script src="./webcam.js"></script>
+  </body>
+</html>

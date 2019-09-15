@@ -1,11 +1,23 @@
 <!DOCTYPE html>
 <html>
   <head>
-   <!-- Preload -->
-   <link rel="preload" href="assets/fonts/rubik-regular.woff2" as="font" type="font/woff2" crossorigin>
-	<link rel="preload" href="assets/fonts/space-mono-regular.woff2" as="font" type="font/woff2" crossorigin>
-    
-   <script
+    <!-- Preload -->
+    <link
+      rel="preload"
+      href="assets/fonts/rubik-regular.woff2"
+      as="font"
+      type="font/woff2"
+      crossorigin
+    />
+    <link
+      rel="preload"
+      href="assets/fonts/space-mono-regular.woff2"
+      as="font"
+      type="font/woff2"
+      crossorigin
+    />
+
+    <script
       src="https://code.jquery.com/jquery-3.4.1.js"
       integrity="sha256-WpOohJOqMqqyKL9FccASB9O0KwACQJpFTUBLTYOVvVU="
       crossorigin="anonymous"
@@ -30,32 +42,40 @@
           <div class="button minimize"></div>
           <div class="button maximize"></div>
         </div>
-        <div class="title">Smart Therapy: Let me help you today.</div>
+        <div class="title" style="color:darkgrey;">
+          <b>Hey! I'm Dorothy - I'm here to listen, and I'm here for you.</b>
+        </div>
       </div>
       <ul class="messages" id="ul_input"></ul>
+      &nbsp;&nbsp;&nbsp;
       <div class="bottom_wrapper clearfix">
-        <div class="message_input_wrapper">
+        <div
+          class="message_input_wrapper"
+          style="font-family: Ubuntu; float:left; font-size: 17px;"
+        >
           <input
             class="message_input"
             id="text_message"
-            placeholder="Tell me how you feel today..."
-            onkeydown="if (event.keyCode == 13)document.getElementById('send').click()"
+            value="{{ myfunction() }}"
+            onkeydown="if (event.keyCode ==13)document.getElementById('send').click()"
           />
-          <p> {{ myfunction() }}</p>
         </div>
-     
 
-        <div class = "send_message1" id = 'audio' onclick = "start_dictation()">
-           
-
-        <span style="font-size: 32px; color:black;">
-          <i class="fas fa-microphone"></i>
-        </span>
-      </div>
+        <div class="send_message1" style="float:right;">
+          <span style="font-size: 35px; color: #a3d063;">
+            <a href="{{ url_for('chat') }}">
+              <i class="fas fa-microphone" style="color: #a3d063;"></i
+            ></a>
+          </span>
+        </div>
+        &nbsp;&nbsp;&nbsp;
+        <br /><br /><br />
         <div class="send_message" id="send" onclick="get_message()">
           <!--<div class="icon"></div>-->
 
-          <div class="text">Send</div>
+          <span style="font-size: 32px; color:black;">
+            <i class="fas fa-paper-plane"></i>
+          </span>
         </div>
       </div>
     </div>
@@ -69,6 +89,5 @@
     </div>
 
     <script src="../static/chat.js"></script>
-    
   </body>
 </html>

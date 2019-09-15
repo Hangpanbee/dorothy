@@ -1,0 +1,323 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <script src="../static/face-api.js"></script>
+    <script src="../static/commons.js"></script>
+    <link rel="stylesheet" href="../static/ten.css" />
+    <link
+      rel="stylesheet"
+      href="https://cdnjs.cloudflare.com/ajax/libs/materialize/0.100.2/css/materialize.css"
+    />
+    <script
+      type="text/javascript"
+      src="https://code.jquery.com/jquery-2.1.1.min.js"
+    ></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/materialize/0.100.2/js/materialize.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@tensorflow/tfjs@0.14.1/dist/tf.min.js"></script>
+
+    <!-- Preload -->
+    <link
+      rel="preload"
+      href="assets/fonts/rubik-regular.woff2"
+      as="font"
+      type="font/woff2"
+      crossorigin
+    />
+    <link
+      rel="preload"
+      href="assets/fonts/space-mono-regular.woff2"
+      as="font"
+      type="font/woff2"
+      crossorigin
+    />
+
+    <script
+      src="https://code.jquery.com/jquery-3.4.1.js"
+      integrity="sha256-WpOohJOqMqqyKL9FccASB9O0KwACQJpFTUBLTYOVvVU="
+      crossorigin="anonymous"
+    ></script>
+    <script src="http://maxcdn.bootstrapcdn.com/bootstrap/3.3.0/js/bootstrap.min.js"></script>
+    <link
+      href="http://maxcdn.bootstrapcdn.com/bootstrap/3.3.0/css/bootstrap.min.css"
+      rel="stylesheet"
+      id="bootstrap-css"
+    />
+    <script src="https://kit.fontawesome.com/2b0955ccca.js"></script>
+    <link rel="stylesheet" href="../static/chat.css" />
+  </head>
+  <body>
+     
+     
+    <video autoplay muted loop id="mlvideo">
+      <source src="../static/happy.mov" type="video/mp4" />
+    </video>
+        <div id="navbar"></div>
+        <div class="center-content page-container">
+          
+            <p >
+                <span id="status">Camera loading..</span>
+            </p>
+            <div style="position: relative" class="margin">
+                <video onplay="onPlay(this)" id="inputVideo" autoplay muted></video>
+                <canvas id="overlay" />
+                <canvas id='canvas' />
+            </div>
+            <br/><br/><br/><br/><br/><br/><br/>
+
+         
+    
+          
+            <center style="padding:10px">
+            
+    
+        </div>
+        <style>
+            #status {
+                font-family: 'Trebuchet MS', 'Lucida Sans Unicode', 'Lucida Grande', 'Lucida Sans', Arial, sans-serif Ubuntu, Geneva, Tahoma, Verdana, sans-serif;
+            }
+    
+            .inline {
+                display: inline-block;
+            }
+        </style>
+        <script>
+            let scoreThreshold = 0.5
+            let sizeType = '160'
+            let modelLoaded = false
+            var cImg;
+            var constraints = {
+                audio: false,
+                video: {
+                    width: 150,
+                    height: 100
+                }
+            };
+            var EmotionModel;
+            var offset_x = 27;
+            var offset_y = 20;
+            var emotion_labels = ["angry", "disgust", "fear", "happy", "sad", "surprise", "neutral"];
+            var emotion_colors = ["#ff0000", "#00a800", "#ff4fc1", "#ffe100", "#306eff", "#ff9d00", "#7c7c7c"];
+    
+            let forwardTimes = []
+    
+            function updateTimeStats(timeInMs) {
+                forwardTimes = [timeInMs].concat(forwardTimes).slice(0, 30)
+                const avgTimeInMs = forwardTimes.reduce((total, t) => total + t) / forwardTimes.length
+                $('#time').val(`${Math.round(avgTimeInMs)} ms`)
+                $('#fps').val(`${faceapi.round(1000 / avgTimeInMs)}`)
+            }
+    
+            function onIncreaseThreshold() {
+                scoreThreshold = Math.min(faceapi.round(scoreThreshold + 0.1), 1.0)
+                $('#scoreThreshold').val(scoreThreshold)
+            }
+    
+            function onDecreaseThreshold() {
+                scoreThreshold = Math.max(faceapi.round(scoreThreshold - 0.1), 0.1)
+                $('#scoreThreshold').val(scoreThreshold)
+            }
+    
+            function onSizeTypeChanged(e, c) {
+                sizeType = e.target.value
+                $('#sizeType').val(sizeType)
+            }
+    
+            async function onPlay(videoEl) {
+                if (videoEl.paused || videoEl.ended || !modelLoaded)
+                    return false
+    
+                const {
+                    width,
+                    height
+                } = faceapi.getMediaDimensions(videoEl)
+                const canvas = $('#overlay').get(0)
+                canvas.width = width
+                canvas.height = height
+    
+                const forwardParams = {
+                    inputSize: parseInt(sizeType),
+                    scoreThreshold
+                }
+    
+                const ts = Date.now()
+                const result = await faceapi.detectAllFaces(videoEl, new faceapi.TinyFaceDetectorOptions(forwardParams))
+                console.result
+    //            const result = await faceapi.tinyYolov2(videoEl, forwardParams)
+                if (result.length != 0) {
+    
+    
+                    const context = canvas.getContext('2d')
+                    context.drawImage(videoEl, 0, 0, width, height)
+    
+                    let ctx = context;
+                    ctx.lineWidth = 4;
+                    ctx.font = "25px Arial"
+                    ctx.fillText('Result', 0, 0);
+    
+                    for (var i = 0; i < result.length; i++) {
+                        ctx.beginPath();
+                        var item = result[i].box;
+                        let s_x = Math.floor(item._x+offset_x);
+                        if (item.y<offset_y){
+                            var s_y = Math.floor(item._y);
+                        }
+                        else{
+                            var s_y = Math.floor(item._y-offset_y);
+                        }
+                        let s_w = Math.floor(item._width-offset_x);
+                        let s_h = Math.floor(item._height);
+                        let cT = ctx.getImageData(s_x, s_y, s_w, s_h);
+                        cT = preprocess(cT);
+    
+                        z = EmotionModel.predict(cT)
+                        let index = z.argMax(1).dataSync()[0]
+                        let label = emotion_labels[index];
+                        ctx.strokeStyle = emotion_colors[index];
+                        ctx.rect(s_x, s_y, s_w, s_h);
+                        ctx.stroke();
+                        ctx.fillStyle = emotion_colors[index];
+                        ctx.fillText(label, s_x, s_y);
+                        ctx.closePath();
+                    }
+    
+                }
+    
+    
+                updateTimeStats(Date.now() - ts)
+    
+                //            faceapi.drawDetection('overlay', result.map(det => det.forSize(width, height)), {
+                //                withScore: false
+                //            })
+                setTimeout(() => onPlay(videoEl))
+                var status = document.getElementById('status');
+                status.innerHTML = "Smile :)";
+            }
+            async function loadNetWeights(uri) {
+                return new Float32Array(await (await fetch(uri)).arrayBuffer())
+            }
+            // create model
+            async function createModel(path) {
+                let model = await tf.loadModel(path)
+                return model
+            }
+            // load emotion model
+            async function loadModel(path) {
+                //            var lbl = document.getElementById("status");
+                //            lbl.innerText = "Model Loading ..."
+                //            let canvas = document.getElementById("combined");
+                //            let cT = preprocess(cImg)
+                EmotionModel = await createModel(path)
+                //            z = model.predict(cT)
+                //            toPixels(deprocess(z), canvas)
+                //            lbl.innerText = "Model Loaded !"
+            }
+    
+            function preprocess(imgData) {
+                return tf.tidy(() => {
+                    let tensor = tf.fromPixels(imgData).toFloat();
+    
+                    tensor = tensor.resizeBilinear([100, 100])
+    
+                    tensor = tf.cast(tensor, 'float32')
+                    const offset = tf.scalar(255.0);
+                    // Normalize the image 
+                    const normalized = tensor.div(offset);
+                    //We add a dimension to get a batch shape 
+                    const batched = normalized.expandDims(0)
+                    return batched
+                })
+            }
+    
+            function successCallback(stream) {
+                var videoEl = $('#inputVideo').get(0)
+                videoEl.srcObject = stream;
+            }
+    
+            function errorCallback(error) {
+                alert(error)
+                console.log("navigator.getUserMedia error: ", error);
+                //            alert("navigator.getUserMedia error: ", error)
+            }
+    
+            async function run() {
+                const Model_url = 'https://rgangu.github.io/tiny_face_detector_model-weights_manifest.json'           
+                await faceapi.loadTinyFaceDetectorModel(Model_url)
+                modelLoaded = true
+    
+                var status = document.getElementById('status');
+                status.innerHTML = "Setting everything up.. ";
+    
+                navigator.mediaDevices.getUserMedia(constraints)
+                    .then(successCallback)
+                    .catch(errorCallback);
+    
+                onPlay($('#inputVideo').get(0))
+                $('#loader').hide()
+            }
+    
+            $(document).ready(function() {
+                const Model2_url = 'https://rgangu.github.io/model.json'
+                loadModel(Model2_url)
+                const sizeTypeSelect = $('#sizeType')
+                sizeTypeSelect.val(sizeType)
+                sizeTypeSelect.on('change', onSizeTypeChanged)
+                run()
+            })
+        </script>
+              <div class="chat_window">
+
+      <div class="top_menu">
+        <div class="buttons">
+          <div class="button close"></div>
+          <div class="button minimize"></div>
+          <div class="button maximize"></div>
+        </div>
+        <div class="title" style="color:darkgrey;">
+          <b>Hey! I'm Dorothy - I'm here to listen, and I'm here for you.</b>
+        </div>
+      </div>
+      <ul class="messages" id="ul_input"></ul>
+      &nbsp;&nbsp;&nbsp;
+      <div class="bottom_wrapper clearfix">
+        <div
+          class="message_input_wrapper"
+          style="font-family: Ubuntu; float:left; font-size: 17px;"
+        >
+          <input
+            class="message_input"
+            id="text_message"
+            value="{{ myfunction() }}"
+            onkeydown="if (event.keyCode ==13)document.getElementById('send').click()"
+          />
+        </div>
+
+        <div class="send_message1" style="float:right;">
+          <span style="font-size: 35px; color: #a3d063;">
+            <a href="{{ url_for('chat') }}">
+              <i class="fas fa-microphone" style="color: #a3d063;"></i
+            ></a>
+          </span>
+        </div>
+        &nbsp;&nbsp;&nbsp;
+        <br /><br /><br />
+        <div class="send_message" id="send" onclick="get_message()">
+          <!--<div class="icon"></div>-->
+
+          <span style="font-size: 32px; color:black;">
+            <i class="fas fa-paper-plane"></i>
+          </span>
+        </div>
+      </div>
+    </div>
+    <div class="message_template">
+      <li class="message">
+        <div class="avatar"></div>
+        <div class="text_wrapper">
+          <div class="text"></div>
+        </div>
+      </li>
+    </div>
+
+    <script src="../static/chat.js"></script>
+  </body>
+</html>

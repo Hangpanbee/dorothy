@@ -12,7 +12,14 @@ def index():
 
 @app.route('/chat')
 def chat():
-    return render_template('Chatbot.html', myfunction=resultCheck)
+    return render_template('chatcopy.html', myfunction=resultCheck)
+
+
+@app.route('/getaudio')
+def getaudio():
+    return(resultCheck)
+
+
 '''
 @app.route('/audio', methods = ['POST'])
 def get_audio():

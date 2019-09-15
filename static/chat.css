@@ -153,11 +153,11 @@ body {
 }
 .bottom_wrapper .message_input_wrapper {
   display: inline-block;
-  height: 50px;
-  border-radius: 25px;
+  height: 75px;
+  border-radius: 30px;
   border: 1px solid #bcbdc0;
-  width: 780px;
-  position: relative;
+  width: 750px;
+  position: fixed;
   padding: 0 20px;
 }
 .bottom_wrapper .message_input_wrapper .message_input {
@@ -170,8 +170,8 @@ body {
   color: gray;
 }
 .bottom_wrapper .send_message {
-  width: 140px;
-  height: 50px;
+  width: 70px;
+  height: 45px;
   display: inline-block;
   border-radius: 50px;
   background-color: #a3d063;
@@ -194,11 +194,12 @@ body {
 }
 
 .bottom_wrapper .send_message1 {
-  height: 50px;
+  height: 55px;
+  width: 50px;
   display: inline-block;
   border-radius: 50px;
-  background-color: #a3d063;
-  border: 2px solid #a3d063;
+  background-color: #000;
+  border: 2px solid #fff;
   color: #fff;
   cursor: pointer;
   transition: all 0.2s linear;
