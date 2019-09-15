@@ -32,32 +32,38 @@
         </div>
         <div class="title">Smart Therapy: Let me help you today.</div>
       </div>
+
+    
       <ul class="messages" id="ul_input"></ul>
       <div class="bottom_wrapper clearfix">
         <div class="message_input_wrapper">
-          <input
+          <form action = "{{ url_for('reply') }}" method = "POST">
+          <input type = "text"
             class="message_input"
             id="text_message"
+            name = "sentimental_name"
             placeholder="Tell me how you feel today..."
-            onkeydown="if (event.keyCode == 13)document.getElementById('send').click()"
-          />
-          <p> {{ myfunction() }}</p>
+            onkeydown="if (event.keyCode == 13)document.getElementById('send').click()">  
         </div>
+      </form>
      
 
-        <div class = "send_message1" id = 'audio' onclick = "start_dictation()">
+        <!--div class = "send_message1" id = 'audio' onclick = "start_dictation()">
            
 
         <span style="font-size: 32px; color:black;">
           <i class="fas fa-microphone"></i>
         </span>
-      </div>
+      </div-->
         <div class="send_message" id="send" onclick="get_message()">
           <!--<div class="icon"></div>-->
 
           <div class="text">Send</div>
+        
         </div>
+      
       </div>
+     
     </div>
     <div class="message_template">
       <li class="message">
