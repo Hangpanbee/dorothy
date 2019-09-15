@@ -1,8 +1,8 @@
 var me = {};
-me.avatar = "Chatbotassets/avatar.png";
+me.avatar = "../static/avatar.png";
 
 var you = {};
-you.avatar = "Chatbotassets/therapist.png";
+you.avatar = "../static/therapist.png";
 
 function insert_chat(who,text){
   var control = ''
@@ -30,18 +30,19 @@ function insert_chat(who,text){
 
 
 function interact(message){
-console.log("STARTING");
-$.ajax({
-  type: 'POST',
-  url: '/test',
-  contentType: 'application/json',
-  dataType: 'json',
-  data:message,
- success: function(data){
-  insert_chat("you",data['text'])
- }
-  });
-}
+  console.log("STARTING");
+  $.ajax({
+    type: 'POST',
+    url: '/senti',
+    contentType: 'application/json; charset = utf-8',
+    dataType: 'json',
+    data: message,
+   success: function(data){
+    insert_chat("you", data['text'])
+   }
+    });
+  }
+
 
 
 function get_message(){
@@ -53,6 +54,8 @@ console.log(message);
 insert_chat('me',message);
 interact(sender);
  }
+
+
 
 
 function get_audio(){
